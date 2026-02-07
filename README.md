@@ -1,14 +1,39 @@
 # Cybersec-prospective.
 A project for a cybersecurity student starting from zero.
-Project Introduction
-The objective of this project was to establish a fully regulated network interface by implementing custom firewall rules to control inbound and outbound traffic. This setup enables real-time log monitoring to identify suspicious patterns, while also utilizing a reserved IP pool configuration to redirect and neutralize external attacks, preventing them from reaching critical system assets.
+#!/bin/bash
 
-🔍 Modeling and Evaluation
-For this project, I designed a Stateful Firewall Configuration using logical rule-sets and log-parsing scripts.
+# =================================================================
+# PROJECT: Firewall Interface Regulation
+# DESCRIPTION: Basic configuration to allow DNS and HTTP traffic.
+# AUTHOR: [Your Name / ctwrs1311-netizen]
+# =================================================================
 
-Models Used: Rule-based access control lists (ACLs) and automated traffic redirection logic.
+# 1. Reset all existing firewall rules to ensure a clean start
+sudo ufw --force reset
 
-Evaluation Metrics: The system was evaluated based on Packet Inspection Accuracy and Response Time for neutralizing unauthorized connection attempts using the reserved IP strategy.
+# 2. Set Default Policies
+# Deny all incoming traffic (security first) and allow all outgoing traffic
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
 
-🏁 Conclusion
-I recommend implementing this regulated interface structure as a baseline for any network exposed to untrusted traffic. To expand this project, I plan to integrate an automated Intrusion Prevention System (IPS) that can dynamically update firewall rules based on real-time threat intelligence feeds.
+# 3. ALLOW PORT 53 (DNS) 
+# Essential for Domain Name Resolution (translating URLs to IPs)
+# We open both UDP and TCP as per security best practices
+sudo ufw allow 53/udp
+sudo ufw allow 53/tcp
+
+# 4. ALLOW PORT 80 (HTTP)
+# Allows basic web traffic (Insecure web browsing, used for testing)
+sudo ufw allow 80/tcp
+
+# 5. ENABLE FIREWALL
+# Apply the rules and start the service
+sudo ufw --force enable
+
+# 6. VERIFICATION
+# Display the current status and active rules
+echo "----------------------------------------------------"
+echo "🛡️ Firewall configured: Ports 53 and 80 are now OPEN."
+echo "All other ports (including port 83) are CLOSED."
+echo "----------------------------------------------------"
+sudo ufw status verbose
